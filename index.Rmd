@@ -7,8 +7,4 @@ output:
     self_contained: false
 ---
 
-
-
-## Project thoughts
-
 I am interested in exploring data related to enrollment of men and women at Ivy League schools to see if schools give a penalty to women in the admissions process and preference men. 
