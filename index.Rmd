@@ -1,10 +1,51 @@
 ---
 title: "Gov 50 Final Project"
 author: Michelle Amponsah 
-description: Ivy League Admissions Data by Enrollment Across Gender Using Common Data Set 
+description: Effect of Source of News Information on Thoughts on Democracy  
 output:
   distill::distill_article:
     self_contained: false
 ---
 
-I am interested in exploring data related to enrollment of men and women at Ivy League schools to see if schools give a penalty to women in the admissions process and preference men. 
+In this project I seek to study the relationship between the source of news 
+information in countries on the African continent and its effect on participants’
+support for democracy. In other words, the research question I will answer is 
+whether or not where one consumes their news (from traditional newspapers, 
+internet, or social media such as Facebook or Twitter) has an effect on their 
+support for democracy. I hypothesize that those who more often receive their news 
+from social media sites like Facebook and Twitter have weaker support for democracy
+because of the accessibility of extreme viewpoints on social media sites, “echo
+chambers” that reinforce these viewpoints, and misinformation. I hypothesize 
+that those who receive their news from the internet tend to support democracy 
+more than those who receive their news from social media but less than those who 
+receive the majority of their news from newspapers as digital news information 
+(non-social media) encompasses a wide spectrum of viewpoints. 
+
+The data is taken from the responses from a survey administered by Afrobarometer,
+a non-partisan and pan-African research network that seeks to measure attitudes 
+surrounding socio-politics and economics on the African continent. The 
+explanatory variable is question 30, which asks respondents to identify which of 
+three statements is closest to their own opinion. The statements are: 
+
+Statement 1: Democracy is preferable to any other kind of government.
+Statement 2: In some circumstances, a non-democratic government can be preferable
+.Statement 3: For someone like me, it doesn’t matter what kind of government we have.
+
+The variable is coded such that 1 = Statement 3, 2 = Statement 2, and 3 = Statement
+1. Again, 9 = don't know, 98 = refuse dto answer, and -1 = missing. To identify 
+the relationship between a specific news sources and thoughts on democracy, I'd 
+have to conduct separate visualizations such that one news source is on the x
+axis and thoughts on democracy is on the y-axis. A negative correlation between
+the two variables would indicate that the news source is correlated to weaker opinions
+on democracy while a positive correlation would indicate the news source is correlated
+to higher esteem of democracy. 
+
+
+```{r}
+library(tidyverse)
+library(dplyr)
+library(readr)
+load("/Users/michelleamponsah/Downloads/afrobarometer2016.RData")
+afro |> 
+select(RESPNO, Q12A:Q12E, Q30)
+```
