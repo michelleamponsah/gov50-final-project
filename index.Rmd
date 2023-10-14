@@ -46,6 +46,6 @@ library(tidyverse)
 library(dplyr)
 library(readr)
 load("/Users/michelleamponsah/Downloads/afrobarometer2016.RData")
-afro |> 
+afro <- afro |> 
 select(RESPNO, Q12A:Q12E, Q30)
 ```
