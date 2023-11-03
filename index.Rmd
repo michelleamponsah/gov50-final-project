@@ -74,13 +74,19 @@ afro <- afro |>
 afro
 ```
 
-##visualization of social media on support for democracy 
+##visualization 1: 
 
+
+```{r}
+afro <- afro |> 
+  drop_na(tv_news, support_dem)
+
+
+```
 
 ```{r}
 
 tv_news_hist <- afro |> 
-  drop_na(tv_news, support_dem) |> 
   group_by(support_dem) |>
   ggplot(data = afro, mapping = aes(x = tv_news,
                                     y = support_dem)) + geom_col(
