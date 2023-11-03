@@ -11,7 +11,7 @@ In this project I seek to study the relationship between the source of news
 information in countries on the African continent and its effect on participants’
 support for democracy. In other words, the research question I will answer is 
 whether or not where one consumes their news (from traditional newspapers, 
-internet, or social media such as Facebook or Twitter) has an effect on their 
+internet, or social media platforms such as Facebook or Twitter) affects 
 support for democracy. I hypothesize that those who more often receive their news 
 from social media sites like Facebook and Twitter have weaker support for democracy
 because of the accessibility of extreme viewpoints on social media sites, “echo
@@ -27,12 +27,12 @@ surrounding socio-politics and economics on the African continent. The
 explanatory variable is question 30, which asks respondents to identify which of 
 three statements is closest to their own opinion. The statements are: 
 
-Statement 1: Democracy is preferable to any other kind of government.
-Statement 2: In some circumstances, a non-democratic government can be preferable
-.Statement 3: For someone like me, it doesn’t matter what kind of government we have.
+`Statement 1: Democracy is preferable to any other kind of government.`
+`Statement 2: In some circumstances, a non-democratic government can be preferable.`
+`Statement 3: For someone like me, it doesn’t matter what kind of government we have.`
 
 The variable is coded such that 1 = Statement 3, 2 = Statement 2, and 3 = Statement
-1. Again, 9 = don't know, 98 = refuse dto answer, and -1 = missing. To identify 
+1. Again, 9 = don't know, 98 = refused to answer, and -1 = missing. To identify 
 the relationship between a specific news sources and thoughts on democracy, I'd 
 have to conduct separate visualizations such that one news source is on the x
 axis and thoughts on democracy is on the y-axis. A negative correlation between
@@ -48,4 +48,47 @@ library(readr)
 load("/Users/michelleamponsah/Downloads/afrobarometer2016.RData")
 afro <- afro |> 
 select(RESPNO, Q12A:Q12E, Q30)
+
+afro
+```
+
+```{r}
+library(gov50data)
+afro <- afro |>
+  rename(radio_news = Q12A,
+         tv_news = Q12B,
+         newspapers = Q12C,
+         internet = Q12D,
+         social_med = Q12E,
+         democracy_support = Q30)
+afro
+```
+
+
+```{r}
+afro <- afro |> 
+  mutate(support_dem = case_when(democracy_support == "1" ~ "Statement 3",
+                                 democracy_support == "2" ~ "Statement 2",
+                                 democracy_support == "3" ~ "Statement 1"))
+
+afro
+```
+
+##visualization of social media on support for democracy 
+
+
+```{r}
+
+tv_news_hist <- afro |> 
+  drop_na(tv_news, support_dem) |> 
+  group_by(support_dem) |>
+  ggplot(data = afro, mapping = aes(x = tv_news,
+                                    y = support_dem)) + geom_col(
+                                      mapping = aes(color = support_dem)) +
+  labs(x = "Frequency Respondent Receives News from TV",
+       y = "Support for Democracy",
+       title = "TV News and Democracy Support") + scale_x_log10() 
+
+tv_news_hist
+
 ```
