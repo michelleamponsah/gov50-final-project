@@ -69464,6 +69464,63 @@ to higher esteem of democracy.</p>
 </div>
 <p><img src="index_files/figure-html5/unnamed-chunk-5-1.png" width="624" /></p>
 </div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>television_summary</span> <span class='op'>&lt;-</span> <span class='va'>afro</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>support_dem</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span><span class='op'>(</span></span>
+<span>    avg_tv <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>tv_news</span><span class='op'>)</span>,</span>
+<span>    sd_tv <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>tv_news</span><span class='op'>)</span></span>
+<span>  <span class='op'>)</span></span>
+<span></span>
+<span><span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span><span class='va'>television_summary</span>,</span>
+<span>             col.names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Democracy Statement"</span>,</span>
+<span>                           <span class='st'>"Mean TV News"</span>,</span>
+<span>                           <span class='st'>"SD TV News"</span><span class='op'>)</span>,</span>
+<span>             digits <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></span></code></pre>
+</div>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Democracy Statement</th>
+<th style="text-align: right;">Mean TV News</th>
+<th style="text-align: right;">SD TV News</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Statement 1</td>
+<td style="text-align: right;">2.17</td>
+<td style="text-align: right;">1.79</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Statement 2</td>
+<td style="text-align: right;">2.36</td>
+<td style="text-align: right;">1.76</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Statement 3</td>
+<td style="text-align: right;">1.97</td>
+<td style="text-align: right;">1.82</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>In this formatted knitted table, we see the average value for those who listed
+<code>television</code> as their primary source of news consumption and the standard deviation
+of this value as well grouped by the democracy <code>support</code> variable, which asked
+respondents to identify which statement corresponded most closely with their
+views:</p>
+<p><code>Statement 1: Democracy is preferable to any other kind of government.</code>
+<code>Statement 2: In some circumstances, a non-democratic government can be preferable.</code>
+<code>Statement 3: For someone like me, it doesn’t matter what kind of government we have.</code></p>
+<p>From the table above, we see that for those who said that the kind of government
+in place doesn’t matter for them, the average consumption of television as the
+primary source of news was lowest for this group. Average consumption of television
+as the primary source of news intake was highest, only slightly, for those who
+elected statement 2 that a non-democratic government can be preferable. The
+variation among these groups is quite low as well as the SD is within .03-.06
+deviations.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
