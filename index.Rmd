@@ -98,3 +98,37 @@ tv_news_hist <- afro |>
 tv_news_hist
 
 ```
+
+```{r}
+television_summary <- afro |>
+  group_by(support_dem) |>
+  summarize(
+    avg_tv = mean(tv_news),
+    sd_tv = sd(tv_news)
+  )
+
+knitr::kable(tvnews_summary,
+             col.names = c("Democracy Statement",
+                           "Mean TV News",
+                           "SD TV News"),
+             digits = 2)
+
+```
+
+In this formatted knitted table, we see the average value for those who listed
+`television` as their primary source of news consumption and the standard deviation
+of this value as well grouped by the democracy `support` variable, which asked
+respondents to identify which sttaement corresponded most closely with their 
+views: 
+
+`Statement 1: Democracy is preferable to any other kind of government.`
+`Statement 2: In some circumstances, a non-democratic government can be preferable.`
+`Statement 3: For someone like me, it doesn’t matter what kind of government we have.`
+
+From the table above, we see that for those who said that the kind of government
+in place doesn't matter for them, the average consumption of television as the
+primary source of news was lowest for this group. Average consumption of television
+as the primary source of news intake was highest, only slightly, for those who 
+elected statement 2 that a non-democratic government can be preferable. The 
+variation among these groups is quite low as well as the SD is within .03-.06 
+deviations. 
