@@ -107,7 +107,7 @@ television_summary <- afro |>
     sd_tv = sd(tv_news)
   )
 
-knitr::kable(tvnews_summary,
+knitr::kable(television_summary,
              col.names = c("Democracy Statement",
                            "Mean TV News",
                            "SD TV News"),
