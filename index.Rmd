@@ -118,7 +118,7 @@ knitr::kable(tvnews_summary,
 In this formatted knitted table, we see the average value for those who listed
 `television` as their primary source of news consumption and the standard deviation
 of this value as well grouped by the democracy `support` variable, which asked
-respondents to identify which sttaement corresponded most closely with their 
+respondents to identify which statement corresponded most closely with their 
 views: 
 
 `Statement 1: Democracy is preferable to any other kind of government.`
