@@ -7,39 +7,66 @@ output:
     self_contained: false
 ---
 
-In this project I seek to study the relationship between the source of news 
-information in countries on the African continent and its effect on participants’
-support for democracy. In other words, the research question I will answer is 
-whether or not where one consumes their news (from traditional newspapers, 
-internet, or social media platforms such as Facebook or Twitter) affects 
-support for democracy. I hypothesize that those who more often receive their news 
-from social media sites like Facebook and Twitter have weaker support for democracy
-because of the accessibility of extreme viewpoints on social media sites, “echo
-chambers” that reinforce these viewpoints, and misinformation. I hypothesize 
-that those who receive their news from the internet tend to support democracy 
-more than those who receive their news from social media but less than those who 
-receive the majority of their news from newspapers as digital news information 
-(non-social media) encompasses a wide spectrum of viewpoints. 
 
-The data is taken from the responses from a survey administered by Afrobarometer,
-a non-partisan and pan-African research network that seeks to measure attitudes 
-surrounding socio-politics and economics on the African continent. The 
-explanatory variable is question 30, which asks respondents to identify which of 
-three statements is closest to their own opinion. The statements are: 
+# Introduction 
 
-`Statement 1: Democracy is preferable to any other kind of government.`
-`Statement 2: In some circumstances, a non-democratic government can be preferable.`
-`Statement 3: For someone like me, it doesn’t matter what kind of government we have.`
+
+I am a newsie. I love the news — one of the first clubs I joined my freshman 
+fall was The Crimson, and ever since I've thrown myself into the news cycle. I'm
+interested in this question of where people get their news and how it affects
+their perception towards things like goverment, democracy, and the world they live
+in. In this project I seek to study the relationship between the frequency that
+one consumes their news from social media and its effect on their support for 
+democratic government. 
+
+My research question is this: does primarily receiving one's news from social
+media cause lessened support for democracy? 
+
+I hypothesize that those who more often receive their news 
+from social media sites like Facebook and Twitter have weaker support for 
+democracy because of the accessibility of extreme viewpoints on social media 
+sites, “echo chambers” that reinforce these viewpoints, and misinformation.
+The null hypothesis, then, would be that frequent consumption of news from
+social media has no effect on support for democracy. 
+
+
+# The Dataset 
+
+I'll be using data from responses to the Afrobarometer 2018 survey. 
+Afrobarometer is a non-partisan, pan-African research organization that
+administers the Afrobarometer, "temperature check" survey to measure
+attitudes surrounding democracy and governance on the African continent. 
+I'll be using responses that pertain to the news consumption part of this survey.
+This study is cross-sectional because it takes a "snapshot" of the population
+at a particular point in time and the data is observational (I had no influence
+or assigning role on the participants' responses). 
+
+For my explanatory variable, I focus on Q12E. This represents the question that 
+asks how frequently the respondent gets their news from social media sites like
+Facebook or Twitter. 
+
+This question is coded such that 0 = Never, 1 = less than once a month,
+2 = a few times a month, 3 = a few times a week, and 4 = every day. 
+For the purposes of this study, I am concerned with those who receive their news
+from that specific news source from never to everyday (0-4). 
+
+The outcome variable I focus on is Question 30 (`Q30`), which asks respondents
+to identify which of the following three statements is closest to their opinion. 
+
+The statements are: 
+
+Statement 1: Democracy is preferable to any other kind of government.
+Statement 2: In some circumstances, a non-democratic government can be preferable.
+Statement 3: For someone like me, it doesn’t matter what kind of government we have.
 
 The variable is coded such that 1 = Statement 3, 2 = Statement 2, and 3 = Statement
-1. Again, 9 = don't know, 98 = refused to answer, and -1 = missing. To identify 
-the relationship between a specific news sources and thoughts on democracy, I'd 
-have to conduct separate visualizations such that one news source is on the x
-axis and thoughts on democracy is on the y-axis. A negative correlation between
-the two variables would indicate that the news source is correlated to weaker opinions
-on democracy while a positive correlation would indicate the news source is correlated
-to higher esteem of democracy. 
+1. Again, 9 = don't know, 98 = refused to answer, and -1 = missing. 
 
+The dataset as it came was hard to read. Therefore, I renamed the question 
+variables so that they reflected the type of news they asked respondents about: 
+
+
+# Loading Afro 
 
 ```{r}
 library(tidyverse)
@@ -49,86 +76,166 @@ load("/Users/michelleamponsah/Downloads/afrobarometer2016.RData")
 afro <- afro |> 
 select(RESPNO, Q12A:Q12E, Q30)
 
-afro
 ```
-
+## Renaming the Variable 
 ```{r}
 library(gov50data)
 afro <- afro |>
-  rename(radio_news = Q12A,
-         tv_news = Q12B,
-         newspapers = Q12C,
-         internet = Q12D,
-         social_med = Q12E,
-         democracy_support = Q30)
-afro
+  rename(social_med = Q12E) |> 
+  filter(social_med == c(0, 1, 2, 3, 4))
 ```
 
-
-```{r}
-afro <- afro |> 
-  mutate(support_dem = case_when(democracy_support == "1" ~ "Statement 3",
-                                 democracy_support == "2" ~ "Statement 2",
-                                 democracy_support == "3" ~ "Statement 1"))
-
-afro
-```
-
-##visualization 1: 
+I also wasn't a fan of the way the `Q30` variable was coded (super confusing!)
+so I re-coded it such that it made more sense to me and was a string instead 
+of numbers:
 
 
-```{r}
-afro <- afro |> 
-  drop_na(tv_news, support_dem)
-
-
-```
+# Re-coding democracy_support 
 
 ```{r}
 
-tv_news_hist <- afro |> 
-  group_by(support_dem) |>
-  ggplot(data = afro, mapping = aes(x = tv_news,
-                                    y = support_dem)) + geom_col(
-                                      mapping = aes(color = support_dem)) +
-  labs(x = "Frequency Respondent Receives News from TV",
-       y = "Support for Democracy",
-       title = "TV News and Democracy Support") + scale_x_log10() 
+library(dplyr)
 
-tv_news_hist
+afro |> 
+  count(Q30)
+
+
+afro <- afro |>
+  drop_na(Q30) |> 
+    mutate(support_dem = case_when(Q30 == "1" ~ "Statement 3",
+                                 Q30 == "2" ~ "Statement 2",
+                                 Q30 == "3" ~ "Statement 1"))
 
 ```
 
+To identify the relationship between specific social media as a news source
+and thoughts on democracy, I will conduct a visualization and regression such that I
+can investigate the relationship between frequency of news consumption from social
+media and support for democracy. In terms of visualization, a negative 
+correlation between the two variables would indicate that the social media news
+consumption is correlated to weaker opinions on democracy while a positive 
+correlation would indicate the social media news consumption is correlated to 
+higher support for democracy. Let's see the distribution of social media news
+consumption, first of all: 
+
+# Visualizations and Summary of Social Media News Consumption  
+
 ```{r}
-television_summary <- afro |>
+afro |>
+  ggplot(mapping = aes(x = social_med, y = support_dem)) +
+  geom_col(mapping = aes(fill = support_dem)) + labs(x = "Social Media News",
+                    y = "Support for Democracy",
+                    title = "Distribution of Support for Democracy by
+                    Social Media Variable") + scale_x_log10()
+```
+# Social Media News Summary 
+```{r}
+soc_news_summary <- afro |>
   group_by(support_dem) |>
   summarize(
-    avg_tv = mean(tv_news),
-    sd_tv = sd(tv_news)
+    avg_social = mean(social_med),
+    sd_social = sd(social_med)
   )
 
-knitr::kable(television_summary,
-             col.names = c("Democracy Statement",
-                           "Mean TV News",
-                           "SD TV News"),
+knitr::kable(soc_news_summary,
+             col.names = c("Democracy",
+                           "Avg Social Media",
+                           "SD Social Media"),
              digits = 2)
 
 ```
 
-In this formatted knitted table, we see the average value for those who listed
-`television` as their primary source of news consumption and the standard deviation
-of this value as well grouped by the democracy `support` variable, which asked
-respondents to identify which statement corresponded most closely with their 
-views: 
+My dependent variable is support for democracy. As the graph shows, as consumption
+of news from social media increases, so does likelihood that respondent agrees
+with statement 2 and statement 1. 
 
-`Statement 1: Democracy is preferable to any other kind of government.`
-`Statement 2: In some circumstances, a non-democratic government can be preferable.`
-`Statement 3: For someone like me, it doesn’t matter what kind of government we have.`
+In the summary (formatted knitted table) we see the average value and standard
+deviation of social media news consumption for each statement (the support for
+democracy variable).The average value of social media news consumption for
+statement 1 was 0.9, for statement 2 was 1.12, and for statement 3 was 0.75 
+Interpreted, this means that the highest average consumption of social media
+as news was observed for those who chose statement 2, that "In some circumstances,
+a non-democratic government can be preferable." In this table, I'm not seeing
+a clear relationship emerge between support for democracy and average social
+media news consumption. 
 
-From the table above, we see that for those who said that the kind of government
-in place doesn't matter for them, the average consumption of television as the
-primary source of news was lowest for this group. Average consumption of television
-as the primary source of news intake was highest, only slightly, for those who 
-elected statement 2 that a non-democratic government can be preferable. The 
-variation among these groups is quite low as well as the SD is within .03-.06 
-deviations. 
+# Single Variable Regression 
+
+Since I'm primarily interested in social media news consumption and support for
+democracy, my regression will include only that variable. I used `Q30` instead of
+`support_dem`because I'll need the numeric values to conduct this regression: 
+
+```{r}
+
+sing <- lm(Q30 ~ social_med, data = afro)
+
+varnames1 <- c("(Intercept)" = "Intercept",
+               "social_med" = "Social Media Consumption")
+
+modelsummary::modelsummary(sing, statistic = "p.value", 
+                           gof_map = c("nobs", "r.squared", "adj.r.squared"),
+                           coef_map = varnames1)
+```
+As can be seen in the table above the intercept is 2.596, meaning that when
+there is no social media news consumption, the support for democracy value is 
+at 2.596. The coefficient for social media news consumption, or the slope of the 
+line, is 0.008, meaning that for the variable social media consumption, there is 
+a .008 increase in support for democracy as social media news consumption
+increases. The p-value is 0.099, or 0.1, which is not statistically significant
+for an alpha value of .05. Statistical significance would occur if the p-value
+was less than .05. Because of the cross-sectional nature of the survey, 
+I do believe the coefficient has a causal effect and we can make a causal
+interpretation. 
+
+
+# Summary Plot 
+
+```{r}
+
+afro |>
+  ggplot(aes(x = social_med, fill = support_dem)) +
+  geom_bar(position = "dodge") +
+  labs(x = "Frequency of Social Media Consumption", y = "Count",
+       title = "Support for Democracy by Frequency of Social Media Consumption")
+
+```
+
+Based on this barplot, we can observe that support for statement 1
+("Democracy is preferable to any other kind of government") is highest when 
+the respondents marked that they "never" consume news from social media (0). 
+However, as frequency of news consumption from social media consumption increases,
+support for statement 1 drops dramatically then increases incrementally. The same
+is true for statements 1, 2, and 3, but is most magnified for statement 1.
+It appears from the graph that despite frequency of news consumption, respondents
+are more likely to support statement 1 than the other two statements. Support
+for statements 1, 2, and 3 is lowest when the respondents consumed news from
+social media less than once a month. 
+
+# Conclusion 
+
+Based on this study, I fail to reject the null hypothesis of no relationship
+between social media news consumption and support for democracy. There is not
+a statistically significant relationship between frequency of social media as 
+news consumption and support for democratic governance. My hypothesis, then, is
+disproved. Further, the coefficient for social media news consumption was very
+close to 0, indicating a very weak (but slightly positive) relationship between 
+the variables of social media news consumption and support for democracy. Still,
+there are limitations to this report. To specify, there may be confounding
+variables that complicate the conclusions I draw between social media news
+consumption and support for democracy. For example, data like the age, racial
+identity, and wealth of the respondent may also affect what they choose for the
+support for democracy variable. Further, the answers to other questions about 
+news consumption may affect or be conditional upon getting the majority of one's
+news from social media; for example, it might be the case that people more likely
+to frequently consume news from social media are also more likely to consume
+news from the internet, and that is an interesting relationship to explore as 
+well. Therefore, there is a case to be made that only studying social media
+news consumption does not present the most complete picture of source of news
+consumption and support for democracy. Finally, missingness is a significant 
+part of the Afrobarometer survey. For the Q30 question about democracy support
+alone, there are 1112 missing values (before I dropped them) which presents an 
+issue for statistical interpretation.
+
+# Works Cited
+
+https://www.afrobarometer.org/wp-content/uploads/2022/02/tun_r7_sor_eng.pdf
