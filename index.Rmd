@@ -234,7 +234,7 @@ news consumption does not present the most complete picture of source of news
 consumption and support for democracy. Finally, missingness is a significant 
 part of the Afrobarometer survey. For the Q30 question about democracy support
 alone, there are 1112 missing values (before I dropped them) which presents an 
-issue for statistical interpretation.
+issue for statistical interpretation. 
 
 # Works Cited
 
